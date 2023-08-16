@@ -12,6 +12,8 @@ Run `docker run -p 8080:8080 dragonfly` to run the Docker image
 
 Enter http://localhost:8080/swagger-ui/index.html#/ for API endpoints
 
+NOTE: You might need to change the variables in application.properties depending on your OS and whether you want the local run or a Docker image. Just uncomment the correct ones.
+
 
 # Description
 
