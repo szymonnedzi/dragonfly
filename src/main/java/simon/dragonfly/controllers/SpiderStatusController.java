@@ -14,15 +14,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import simon.dragonfly.staticHelpers.HTTPHelper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
+@Tag(name = "Spider Status Controller", description = "APIs for checking the status of Spider service")
 public class SpiderStatusController {
 
     @Value("${service.url.status}")
     private String serviceUrl;
 
-    // Endpoint to see if Spider is on
     @GetMapping("/spiderStatus")
+    @Operation(summary = "Check Spider status", description = "This endpoint allows you to check the status of the Spider service.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Spider is online"),
+            @ApiResponse(responseCode = "500", description = "Error getting Spider status")
+    })
     public ResponseEntity<String> spiderStatus() {
         try {
             String spiderStatus = getSpiderStatus();

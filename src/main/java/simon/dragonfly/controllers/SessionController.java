@@ -7,18 +7,28 @@ import org.springframework.web.bind.annotation.*;
 
 import simon.dragonfly.staticHelpers.GSONHelper;
 import simon.dragonfly.utility.SessionUtility;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.net.http.HttpResponse;
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@Tag(name = "Session Controller", description = "APIs for managing sessions")
 public class SessionController {
 
     @Autowired
     private SessionUtility sessionUtility;
 
     @GetMapping("/session")
-    public ResponseEntity<String> createSession() throws InterruptedException, ExecutionException {
+    @Operation(summary = "Create and monitor a session", description = "This endpoint allows you to create and monitor a session.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Session established and ready"),
+            @ApiResponse(responseCode = "500", description = "Error checking session status")
+    })
+    public ResponseEntity<String> createAndMonitorSession() throws InterruptedException, ExecutionException {
         HttpResponse<String> response = sessionUtility.initiateSession();
         String id = GSONHelper.getID(response);
         Boolean isReady = GSONHelper.getIsReady(response);
@@ -35,5 +45,4 @@ public class SessionController {
             return new ResponseEntity<>("Error checking session status", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

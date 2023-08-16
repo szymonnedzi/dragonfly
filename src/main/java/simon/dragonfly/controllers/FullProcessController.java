@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import simon.dragonfly.model.DeliveryOrder;
 import simon.dragonfly.staticHelpers.GSONHelper;
 import simon.dragonfly.utility.CSVUtility;
@@ -20,6 +23,8 @@ import simon.dragonfly.utility.SessionUtility;
 import simon.dragonfly.utility.SolutionUtility;
 
 @RestController
+@Tag(name = "Full Process Controller", description = "APIs for handling the full processing of data")
+
 public class FullProcessController {
 
     @Autowired
@@ -35,9 +40,12 @@ public class FullProcessController {
     @Autowired
     private JSONUtility jsonUtility;
 
+    @Operation(summary = "Perform the full data processing", description = "This endpoint performs the full data processing, including CSV handling, session establishment, optimization, polling, solution retrieval, saving results, session deletion, and presenting results.")
+    @ApiResponse(responseCode = "200", description = "Data processing completed successfully")
+    @ApiResponse(responseCode = "500", description = "Error working with Dragonfly")
     @PostMapping(value = "/fullProcess", consumes = { "multipart/form-data" })
     public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) throws Exception {
-        //Hardcoded but can easily be made customizeable
+        // Hardcoded but can easily be made customizeable
         String id = "test-695";
 
         // Post CSV
@@ -61,16 +69,13 @@ public class FullProcessController {
         optimizationUtility.startOptimization(id);
         System.out.println("Starting optimizaton: end");
 
-
         // Poll until the value ceases to improve
         pollingUtility.pollUntilBestSolutionValueIsReached(id);
-
 
         // Stop optimization
         System.out.println("Stopping optimizaton: start");
         optimizationUtility.stopOptimization(id);
         System.out.println("Stopping optimizaton: end");
-
 
         // Fetch results
         HttpResponse<String> response = solutionUtility.getSolution(id);
@@ -79,16 +84,14 @@ public class FullProcessController {
         // Local for now, database later?
         jsonUtility.saveJsonStringToFile(response.body());
 
-        //Delete session
+        // Delete session
         System.out.println("Deleting session: start");
         sessionUtility.deleteSession(id);
         System.out.println("Delete session: end");
 
-
         // Present results
         String result = jsonUtility.readJSONFileAsString();
 
-        
         try {
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
