@@ -14,6 +14,8 @@ Enter http://localhost:8080/swagger-ui/index.html#/ for API endpoints
 
 NOTE: You might need to change the variables in application.properties depending on your OS and whether you want the local run or a Docker image. Just uncomment the correct ones.
 
+To see the full process in action, upload spidercase.csv to /fullProcess endpoint.
+
 
 # Description
 
