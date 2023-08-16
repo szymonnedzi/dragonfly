@@ -10,8 +10,7 @@ Run `docker build . -t dragonfly` to create working Docker image
 
 Run `docker run -p 8080:8080 dragonfly` to run the Docker image
 
-
-More documentation to follow
+Enter http://localhost:8080/swagger-ui/index.html#/ for API endpoints
 
 
 # Description
@@ -38,3 +37,6 @@ The following application performs the following functionalities:
 - Deletes the session in Spider
 
 - Returns the found result back to the user in a body of a HTTP response
+
+
+This process is fully available under the /fullProcess controller or decomposed into separate steps functions under each other controller.
