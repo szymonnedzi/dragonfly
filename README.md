@@ -1,7 +1,6 @@
 # Dragonfly
 Project task for Distribution Innovation
 
-
 # Instructions
 
 Run `mvn clean install` to generate /target/ 
